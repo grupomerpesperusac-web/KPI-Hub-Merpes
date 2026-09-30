@@ -686,7 +686,7 @@ table.kpi-tbl tr:hover td{background:var(--gold-lt)}
 </div><!-- /app -->
 
 <!-- MODAL AHORRO -->
-<div class="overlay" id="modal_ahorro">
+<div class="overlay" id="modal_ahorro" style="display:none">
   <div class="modal" style="background:#fff;border-radius:14px;width:560px;max-width:95vw;padding:0;box-shadow:0 8px 32px rgba(0,0,0,.22)">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
       <span style="font-size:18px">💰</span>
@@ -1171,13 +1171,14 @@ const METAS_AHORROS = {
 };
 
 function abrirModalAhorro(){
+  document.getElementById('modal_ahorro').style.display='flex';
   document.getElementById('modal_ahorro').classList.add('open');
   calcAhorroPreview();
   ['aho_precio_ant','aho_precio_neg','aho_cantidad'].forEach(id=>{
     document.getElementById(id).addEventListener('input',calcAhorroPreview);
   });
 }
-function cerrarModal(id){document.getElementById(id).classList.remove('open')}
+function cerrarModal(id){document.getElementById(id).classList.remove('open');document.getElementById(id).style.display='none';}
 function calcAhorroPreview(){
   const ant = parseFloat(document.getElementById('aho_precio_ant').value)||0;
   const neg = parseFloat(document.getElementById('aho_precio_neg').value)||0;
