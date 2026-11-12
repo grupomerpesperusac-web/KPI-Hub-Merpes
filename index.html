@@ -273,6 +273,49 @@ table.kpi-tbl tr:hover td{background:var(--gold-lt)}
   .card{box-shadow:none;border:1px solid var(--border)}
   .page{display:block!important}
 }
+
+/* v1.1 — fix: el modal de ahorros no tenía regla .overlay y se dibujaba al final de la página */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px;overflow-y:auto}
+.overlay .modal{max-height:92vh;overflow-y:auto}
+/* v1.2 — Desempeño: KPIs configurables por puesto/período + fotos */
+.dz-sub{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.dz-subtab{border:2px solid var(--border);background:#fff;border-radius:20px;padding:8px 16px;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .15s}
+.dz-subtab:hover{border-color:var(--gold);color:var(--navy);background:var(--gold-lt)}
+.dz-subtab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.dz-n{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.12);font-size:10px;display:inline-flex;align-items:center;justify-content:center}
+.dz-subtab.active .dz-n{background:var(--gold);color:var(--navy)}
+.alert-info-dz{background:var(--navy-lt);color:var(--navy);border:1.5px solid #C8D5E8;border-radius:8px;padding:9px 13px;font-size:12px;margin-bottom:12px;line-height:1.5}
+.alert-warn-dz{background:var(--amber-lt);color:var(--amber);border:1.5px solid #E6C84A;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:600;margin:10px 18px}
+.dz-lbl{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px}
+.dz-lbl2{font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px}
+.dz-inp-m{border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;font-size:12px;outline:none;background:#fff}
+.dz-firma{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase}
+.dz-cod{display:inline-block;background:var(--navy);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:3px}
+.dz-src{font-size:9px;background:var(--gray-lt);color:var(--gray);display:inline-block;padding:1px 6px;border-radius:4px;margin-top:3px}
+.dz-new{font-size:8px;background:var(--gold);color:var(--navy);padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:800}
+input.dz-peso{width:58px;border:1.5px solid var(--border);border-radius:6px;padding:5px 6px;font-size:13px;font-weight:700;text-align:center;color:var(--navy);background:var(--gray-lt);outline:none}
+input.dz-meta{width:84px;border:1.5px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;text-align:center;color:var(--navy);background:var(--gray-lt);outline:none}
+input.dz-peso:focus,input.dz-meta:focus{border-color:var(--gold);background:#fff}
+.dz-ref{font-size:9px;color:var(--gray);line-height:1.6}
+.dz-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px}
+.dz-dv{background:var(--green)}.dz-da{background:#E6A817}.dz-dr{background:var(--red)}
+.dz-opt{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;margin-bottom:7px;cursor:pointer;transition:all .15s}
+.dz-opt:hover{border-color:var(--gold);background:var(--gold-lt)}
+.dz-opt.off{opacity:.45;cursor:not-allowed}
+.dz-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gold);margin:12px 0 7px;padding-bottom:4px;border-bottom:2px solid var(--gold-lt)}
+.dz-foto{width:92px;height:92px;border-radius:50%;border:3px solid var(--gold);overflow:hidden;background:#2d4a70;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;flex-shrink:0}
+.dz-foto img{width:100%;height:100%;object-fit:cover}
+.dz-foto .ph{font-size:34px;color:rgba(255,255,255,.45)}
+.dz-foto .lb{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:9px;text-align:center;padding:3px;opacity:0;transition:.2s}
+.dz-foto:hover .lb{opacity:1}
+.dz-thumb{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);vertical-align:middle;margin-right:8px}
+.ficha-hdr.dz{grid-template-columns:104px 1fr auto}
+@media print{
+  .dz-sub,.dz-edit,.alert-info-dz{display:none!important}
+  #dz_cfg,#dz_hist{display:none!important}
+  .dz-foto{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ficha-hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
@@ -602,54 +645,91 @@ table.kpi-tbl tr:hover td{background:var(--gold-lt)}
   </div>
 </div>
 
-<!-- ══════════════ TAB DESEMPEÑO ══════════════ -->
+<!-- ══════════════ TAB DESEMPEÑO (v1.2: KPIs configurables por puesto + fotos) ══════════════ -->
 <div id="page-desempeno" class="page">
-  <div class="card">
-    <div class="card-hdr">
-      <h2>📋 Evaluación de Desempeño Individual</h2>
-      <div class="sep"></div>
-      <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Imprimir ficha</button>
-      <button class="btn btn-gold btn-sm" onclick="guardarEval()">💾 Guardar evaluación</button>
-    </div>
-    <div class="card-body">
-      <div class="period-bar">
-        <label>Período</label>
-        <input type="month" id="eval_periodo" value="2026-08">
-        <label>Colaborador</label>
-        <input type="text" id="eval_nombre" placeholder="Nombre completo..." style="min-width:200px;border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;font-size:12px;outline:none">
-        <div class="sep"></div>
-        <button class="btn btn-navy" onclick="calcularEval()">⟳ Calcular puntaje</button>
+  <div class="dz-sub">
+    <button class="dz-subtab active" id="dzt_cfg" onclick="dzSub('cfg')"><span class="dz-n">1</span>Configuración de KPIs</button>
+    <button class="dz-subtab" id="dzt_eval" onclick="dzSub('eval')"><span class="dz-n">2</span>Evaluación mensual</button>
+    <button class="dz-subtab" id="dzt_hist" onclick="dzSub('hist')"><span class="dz-n">3</span>Historial</button>
+  </div>
+
+  <!-- 1 · CONFIGURACIÓN -->
+  <div class="dz-panel" id="dz_cfg">
+    <div class="card">
+      <div class="card-hdr"><h2>⚙️ Configurar los KPIs de un puesto</h2></div>
+      <div class="card-body">
+        <div class="alert-info-dz">Cada puesto trabaja con <strong>hasta 4 indicadores</strong>; los pesos deben sumar <strong>100%</strong>. Puedes <strong>quitar o agregar KPIs</strong> y ajustar pesos y metas desde un período determinado: la configuración queda <strong>vigente desde ese mes</strong> y las evaluaciones anteriores conservan la configuración con la que se evaluaron (el histórico no se pierde).</div>
+        <div class="area-label">Selecciona el puesto</div>
+        <div id="dz_pills_cfg"></div>
       </div>
-      <div class="area-label">Selecciona el puesto</div>
-      <div class="puesto-grid" id="puesto_pills"></div>
+    </div>
+    <div class="card" id="dz_cfg_card" style="display:none">
+      <div class="card-hdr">
+        <h2 id="dz_cfg_title">—</h2>
+        <label class="dz-lbl">Vigente desde</label>
+        <input type="month" id="dz_desde" value="2026-11" class="dz-inp-m" onchange="dzCfgRender()">
+        <button class="btn btn-ghost btn-sm dz-edit" onclick="dzAbrirCat()">➕ Agregar KPI</button>
+        <button class="btn btn-ghost btn-sm dz-edit" onclick="dzResetCfg()">↺ Sugeridos</button>
+        <button class="btn btn-gold btn-sm dz-edit" onclick="dzGuardarCfg()">💾 Guardar configuración</button>
+      </div>
+      <div id="dz_cfg_body"></div>
+      <div style="padding:10px 18px 16px" id="dz_cfg_hist"></div>
     </div>
   </div>
 
-  <div id="ficha_eval_wrap" style="display:none">
-    <div class="card" style="overflow:hidden">
-      <div class="ficha-hdr" id="ficha_hdr"></div>
-      <div class="tbl-wrap"><table class="kpi-tbl" id="tbl_eval"></table></div>
-      <div class="total-wrap" id="eval_total"></div>
-      <div style="padding:14px 18px;border-top:1px solid var(--border)">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div><label style="font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">Logros del período</label><textarea class="inp-obs" id="obs_logros" rows="3" placeholder="Principales logros y resultados positivos..."></textarea></div>
-          <div><label style="font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">Oportunidades de mejora</label><textarea class="inp-obs" id="obs_mejora" rows="3" placeholder="Aspectos a mejorar y acciones comprometidas..."></textarea></div>
-          <div><label style="font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">Compromisos próximo mes</label><textarea class="inp-obs" id="obs_compromisos" rows="3" placeholder="Compromisos específicos y medibles..."></textarea></div>
-          <div><label style="font-size:10px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px">Observaciones del evaluador</label><textarea class="inp-obs" id="obs_evaluador" rows="3" placeholder="Contexto, factores externos, observaciones..."></textarea></div>
+  <!-- 2 · EVALUACIÓN -->
+  <div class="dz-panel" id="dz_eval" style="display:none">
+    <div class="card">
+      <div class="card-hdr">
+        <h2>📋 Evaluación de Desempeño Individual</h2>
+        <div class="sep"></div>
+        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Imprimir ficha</button>
+        <button class="btn btn-gold btn-sm dz-edit" onclick="dzGuardarEval()">💾 Guardar evaluación</button>
+      </div>
+      <div class="card-body">
+        <div class="period-bar">
+          <label>Período</label>
+          <input type="month" id="eval_periodo" value="2026-11" onchange="dzFicha()">
+          <label>Colaborador</label>
+          <input type="text" id="eval_nombre" list="dz_colabs" placeholder="Nombre completo (ej. Pamela Pedroza)" style="min-width:230px;border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;font-size:12px;outline:none" oninput="dzFicha(true)">
+          <datalist id="dz_colabs"></datalist>
+          <div class="sep"></div>
+          <button class="btn btn-navy" onclick="dzCalc()">⟳ Calcular puntaje</button>
+        </div>
+        <div class="area-label">Selecciona el puesto</div>
+        <div id="dz_pills_eval"></div>
+      </div>
+    </div>
+    <div id="ficha_eval_wrap" style="display:none">
+      <div class="card" style="overflow:hidden">
+        <div class="ficha-hdr" id="ficha_hdr"></div>
+        <div class="tbl-wrap"><table class="kpi-tbl" id="tbl_eval"></table></div>
+        <div class="total-wrap" id="eval_total"></div>
+        <div style="padding:14px 18px;border-top:1px solid var(--border)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><label class="dz-lbl2">Logros del período</label><textarea class="inp-obs" id="obs_logros" rows="3" placeholder="Principales logros y resultados positivos..."></textarea></div>
+            <div><label class="dz-lbl2">Oportunidades de mejora</label><textarea class="inp-obs" id="obs_mejora" rows="3" placeholder="Aspectos a mejorar y acciones comprometidas..."></textarea></div>
+            <div><label class="dz-lbl2">Compromisos próximo mes</label><textarea class="inp-obs" id="obs_compromisos" rows="3" placeholder="Compromisos específicos y medibles..."></textarea></div>
+            <div><label class="dz-lbl2">Observaciones del evaluador</label><textarea class="inp-obs" id="obs_evaluador" rows="3" placeholder="Contexto, factores externos, observaciones..."></textarea></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px 18px;border-top:1px solid var(--border)">
+          <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div class="dz-firma">Colaborador</div><div style="font-size:10px;color:var(--gray)" id="firma_colab"></div></div>
+          <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div class="dz-firma">Jefe Inmediato</div><div style="font-size:10px;color:var(--gray)">Dante Clavijo B.</div></div>
+          <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div class="dz-firma">Gerencia General</div><div style="font-size:10px;color:var(--gray)">Mauricio Mena</div></div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px 18px;border-top:1px solid var(--border)">
-        <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase">Colaborador</div><div style="font-size:10px;color:var(--gray)" id="firma_colab"></div></div>
-        <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase">Jefe Inmediato</div><div style="font-size:10px;color:var(--gray)">Dante Clavijo B.</div></div>
-        <div style="text-align:center"><div style="border-top:1.5px solid var(--navy);margin:30px 12px 5px"></div><div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase">Gerencia General</div><div style="font-size:10px;color:var(--gray)">Mauricio Mena</div></div>
-      </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:18px">
-    <div class="card-hdr"><h2>📜 Historial de evaluaciones</h2><div class="sep"></div><button class="btn btn-ghost btn-sm" onclick="exportarHistEval()">⬇ Exportar</button></div>
-    <div class="tbl-wrap"><table class="kpi-tbl" id="tbl_hist_eval"></table></div>
+  <!-- 3 · HISTORIAL -->
+  <div class="dz-panel" id="dz_hist" style="display:none">
+    <div class="card">
+      <div class="card-hdr"><h2>📜 Historial de evaluaciones</h2><div class="sep"></div><button class="btn btn-ghost btn-sm" onclick="exportarHistEval()">⬇ Exportar</button></div>
+      <div class="tbl-wrap"><table class="kpi-tbl" id="tbl_hist_eval"></table></div>
+    </div>
   </div>
+
 </div>
 
 <!-- ══════════════ TAB ADMIN ══════════════ -->
@@ -684,6 +764,15 @@ table.kpi-tbl tr:hover td{background:var(--gold-lt)}
 
 </div><!-- /main -->
 </div><!-- /app -->
+
+<!-- MODAL CATÁLOGO KPIs (Desempeño) -->
+<div class="overlay" id="dz_cat_ov" style="display:none">
+  <div class="modal" style="background:#fff;border-radius:14px;width:640px;max-width:95vw;padding:0;box-shadow:0 8px 32px rgba(0,0,0,.22)">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span style="font-size:18px">📋</span><h3 style="font-size:14px;font-weight:700;color:var(--navy);flex:1">Catálogo de KPIs</h3><button class="btn btn-ghost btn-xs" onclick="dzCerrarCat()">✕</button></div>
+    <div style="padding:14px 20px;max-height:62vh;overflow-y:auto" id="dz_cat_body"></div>
+    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center"><span id="dz_cat_msg" style="font-size:11px;color:var(--gray);margin-right:auto"></span><button class="btn btn-ghost btn-sm" onclick="dzCerrarCat()">Cerrar</button></div>
+  </div>
+</div>
 
 <!-- MODAL AHORRO -->
 <div class="overlay" id="modal_ahorro" style="display:none">
@@ -789,6 +878,13 @@ const KPI_DATA = {
     {cod:'OB3',ico:'🏠',nom:'S/ Observados — Artefactos',fml:'S/ obs artefactos ÷ Total obs',resultado:'S/891,470',meta:'Referencia',sem:'r',periodo:'Jun 26',fuente:'Obs_Junio (17.1%)'},
     {cod:'OB4',ico:'📅',nom:'S/ Observados julio (parcial)',fml:'Σ S/ pedidos observados julio',resultado:'S/2,393,182',meta:'≤ S/2M',sem:'a',periodo:'Jul 26 parcial',fuente:'Obs_Julio (32 días)'},
     {cod:'OB5',ico:'🗓️',nom:'Días con observados — junio',fml:'Días hábiles con ≥1 pedido sin stock',resultado:'31 días',meta:'0 días',sem:'r',periodo:'Jun 26',fuente:'Todos los días hábiles'},
+    {cod:'AH1',ico:'💰',nom:'Ahorro por precio acumulado 2026 (Kardex)',fml:'Σ mejoras de precio × unidades compradas (vigencia 1 año por escalón)',resultado:'S/201,401',meta:'Obj. acum. Ago–Nov: S/385K',sem:'r',periodo:'Ene–11 Nov 26',fuente:'Herramienta Inventario v44 · Ahorros por Precio'},
+    {cod:'AH2',ico:'📉',nom:'% Ahorro por precio sobre valor referencial',fml:'Ahorro ÷ (compras reales + ahorro) × 100',resultado:'1.3%',meta:'≥ 5%',sem:'r',periodo:'Ene–11 Nov 26',fuente:'Kardex 4,289 compras · S/15.04M'},
+    {cod:'AH3',ico:'🎯',nom:'Cumplimiento objetivo de ahorro acumulado Ago–Nov',fml:'Ahorro Ago–Nov ÷ Objetivo acumulado × 100',resultado:'28.8% (S/110,974 de S/385K)',meta:'≥ 90%',sem:'r',periodo:'Ago–Nov 26',fuente:'Herramienta Inventario v44'},
+    {cod:'AH4',ico:'👩',nom:'Ahorro por precio — Endira Gómez',fml:'Celulares / TV / portátiles',resultado:'S/113,165 (1.5%)',meta:'≥ 5%',sem:'r',periodo:'Ene–11 Nov 26',fuente:'Herramienta Inventario v44'},
+    {cod:'AH5',ico:'👩',nom:'Ahorro por precio — María Rojas',fml:'Motos / lavadoras / construcción',resultado:'S/84,985 (1.2%)',meta:'≥ 5%',sem:'r',periodo:'Ene–11 Nov 26',fuente:'Herramienta Inventario v44'},
+    {cod:'AH6',ico:'👩',nom:'Ahorro por precio — Cristina Chávez',fml:'Servicios / electrodomésticos',resultado:'S/3,251 (0.5%)',meta:'≥ 5%',sem:'r',periodo:'Ene–11 Nov 26',fuente:'Herramienta Inventario v44'},
+    {cod:'AH7',ico:'🔎',nom:'Mejoras de precio detectadas',fml:'Compras de un SKU a precio menor al mejor previo (mejora mínima 1%)',resultado:'334 mejoras · 2,162 SKUs',meta:'Referencia',sem:'v',periodo:'Ene–11 Nov 26',fuente:'Herramienta Inventario v44'},
   ],
   logistica: [
     {cod:'L01',ico:'🔁',nom:'Rescates — Total acumulado',fml:'Σ pedidos con 2ª oportunidad entrega',resultado:'409',meta:'≤ 200/año',sem:'r',periodo:'Ene–Jul 26',fuente:'Historial_Rescate (S/461K)'},
@@ -1262,174 +1358,305 @@ function toggleEstadoAhorro(id){
 }
 
 // ══════════════════════════════════════════════
-// DESEMPEÑO
+// DESEMPEÑO v1.2 — KPIs configurables por puesto y período + fotos
 // ══════════════════════════════════════════════
-function buildPuestosPills(){
-  const c = document.getElementById('puesto_pills');
-  if(!c) return;
-  c.innerHTML = Object.entries(PUESTOS).map(([area,puestos])=>`
-    <div class="area-label">${area}</div>
-    ${puestos.map(p=>`<div class="puesto-pill" onclick="selPuesto(this,'${p}')">${p}</div>`).join('')}
-  `).join('');
+const DZ_MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DZ_FOTOS = {"DANTE CLAVIJO BAZALAR": "data:image/jpeg;base64,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", "PAMELA PEDROZA": "data:image/jpeg;base64,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"};   // fotos del personal (RR.HH. 15.17 · FOTOS DEL PERSONAL), recortadas 180px
+
+// s: '>' mayor es mejor · '<' menor es mejor · v/a: umbrales verde/amarillo con la meta por defecto (md) · man: se evalúa con V/A/R
+const DZ_CAT={
+ 'Logística':[
+  {id:'L01',n:'% Entregas a tiempo',u:'%',md:95,s:'>',f:'Pedidos entregados en fecha ÷ Total despachados × 100',src:'Historial Rescates / Rutas'},
+  {id:'L02',n:'% Pedidos rescatados',u:'%',md:5,s:'<',v:5,a:7.5,f:'Pedidos rescatados ÷ Total pedidos × 100',src:'Historial Rescates'},
+  {id:'L03',n:'Costo de rescate mensual (S/)',u:'S/',md:0,s:'<',man:1,f:'Suma S/ pedidos rescatados en el mes (verde: baja vs mes ant.)',src:'Historial Rescates'},
+  {id:'L05',n:'Utilización de flota (%)',u:'%',md:85,s:'>',v:85,a:70,f:'Días-unidad operativos ÷ Días-unidad disponibles × 100',src:'Tareo Choferes'},
+  {id:'L06',n:'Cobertura de rutas activas (%)',u:'%',md:90,s:'>',v:90,a:75,f:'Rutas cubiertas ÷ Rutas programadas × 100',src:'Rutas mensuales'}],
+ 'Almacén / Inventarios':[
+  {id:'A01',n:'Exactitud de inventario (%)',u:'%',md:98,s:'>',v:98,a:95,f:'SKUs sin diferencia ÷ SKUs contados × 100',src:'Plataforma Conteo Cíclico'},
+  {id:'A02',n:'% Quiebre de stock rolling 3M',u:'%',md:15,s:'<',v:15,a:25,f:'SKUs en quiebre ÷ SKUs activos × 100 (promedio 3 meses)',src:'Observados / Kardex'},
+  {id:'A03',n:'Valor stock observado (S/)',u:'S/',md:0,s:'<',man:1,f:'Valor comercial en estado Observado (verde: reducción ≥ 5%)',src:'Observados diario'},
+  {id:'A04',n:'% SKUs sin movimiento',u:'%',md:20,s:'<',v:20,a:30,f:'SKUs sin venta 3+ meses ÷ SKUs activos × 100',src:'Kardex'},
+  {id:'A05',n:'Avance conteo cíclico semanal (%)',u:'%',md:95,s:'>',v:95,a:80,f:'SKUs contados ÷ SKUs programados × 100',src:'Plataforma Conteo Cíclico'},
+  {id:'DSP',n:'% Despachos sin error',u:'%',md:98,s:'>',v:98,a:95,f:'Despachos sin diferencia ÷ Total despachos × 100',src:'Liquidación Almacén'},
+  {id:'RCP',n:'% Recepciones registradas el mismo día',u:'%',md:100,s:'>',v:100,a:90,f:'Recepciones ingresadas el día de llegada ÷ Total llegadas × 100',src:'ERP / Almacén'},
+  {id:'PCK',n:'% Precisión de picking',u:'%',md:98,s:'>',v:98,a:95,f:'Pedidos sin error de picking ÷ Total preparados × 100',src:'Liquidación Almacén'},
+  {id:'LIQ',n:'% Guías liquidadas el mismo día',u:'%',md:95,s:'>',v:95,a:80,f:'Guías liquidadas en el día ÷ Total guías recibidas × 100',src:'Registro liquidación'}],
+ 'Compras':[
+  {id:'C01',n:'% Ahorros sobre compras (validados)',u:'%',md:5,s:'>',v:5,a:3,f:'Ahorro negociado validado ÷ Valor referencial × 100',src:'Plataforma Ahorros'},
+  {id:'AHP',n:'% Ahorro por precio (Kardex)',u:'%',md:5,s:'>',v:5,a:3,f:'Ahorro por mejora de precio vs mejor precio previo ÷ Valor referencial × 100',src:'Herramienta Inventario · Ahorros por Precio',nuevo:1},
+  {id:'C02',n:'Nivel de servicio proveedor (%)',u:'%',md:85,s:'>',v:85,a:70,f:'OC entregadas en fecha ÷ OC emitidas × 100',src:'Reporte OC'},
+  {id:'C03',n:'Días de pago promedio (DPO)',u:'días',md:30,s:'>',man:1,f:'Promedio días entre recepción y pago de facturas',src:'Finanzas'},
+  {id:'C04',n:'% OC con crédito negociado',u:'%',md:60,s:'>',v:60,a:40,f:'OC con plazo de crédito ÷ Total OC × 100',src:'Reporte OC'},
+  {id:'C05',n:'% Cumplimiento plan de compras',u:'%',md:90,s:'>',v:90,a:75,f:'SKUs comprados según plan ÷ SKUs planificados × 100',src:'Reporte OC'},
+  {id:'OBS',n:'% Valor observados / venta diaria',u:'%',md:10,s:'<',v:10,a:20,f:'Valor stock observado ÷ Venta diaria promedio × 100',src:'Observados diario'},
+  {id:'DOC',n:'Documentación al día (→ contabilidad)',u:'días',md:2,s:'<',v:2,a:5,f:'Días promedio entre recepción de factura y envío a contabilidad',src:'Control interno'}],
+ 'Confirmaciones / Distribución':[
+  {id:'CON',n:'% Tasa de confirmación exitosa',u:'%',md:90,s:'>',v:90,a:75,f:'Pedidos confirmados ÷ Total a confirmar × 100',src:'Reporte confirmaciones'},
+  {id:'REP',n:'% Reprogramaciones gestionadas en plazo',u:'%',md:100,s:'>',v:100,a:85,f:'Reprogramaciones atendidas en plazo ÷ Total × 100',src:'Historial rescates'},
+  {id:'RES',n:'Reducción de rescates (var. % vs ant.)',u:'%',md:5,s:'>',v:5,a:0,f:'(Rescates mes ant. − mes act.) ÷ Rescates mes ant. × 100',src:'Historial Rescates'},
+  {id:'DEV',n:'Devoluciones coordinadas en plazo',u:'%',md:100,s:'>',v:100,a:85,f:'Devoluciones notificadas en plazo ÷ Total × 100',src:'Reporte coordinación'},
+  {id:'RCH',n:'% Tasa de rechazo de despachos',u:'%',md:8,s:'<',v:8,a:12,f:'Despachos rechazados ÷ Total despachados × 100 (meta 60 días: < 4%)',src:'Merpes-Distribución · Rechazos',nuevo:1},
+  {id:'EFE',n:'% Efectividad de entrega',u:'%',md:92,s:'>',v:92,a:85,f:'Pedidos entregados ÷ Pedidos despachados × 100 (por unidad / fuerza de venta)',src:'Merpes-Distribución · KPI del Día',nuevo:1}],
+ 'Operaciones de Campo':[
+  {id:'ENT',n:'% Entregas / gestiones completadas',u:'%',md:95,s:'>',v:95,a:80,f:'Gestiones completadas ÷ Gestiones asignadas × 100',src:'Reporte supervisor'},
+  {id:'FLT',n:'Disponibilidad del vehículo (%)',u:'%',md:98,s:'>',v:98,a:90,f:'Días operativos ÷ Días hábiles × 100',src:'Tareo Choferes'},
+  {id:'SEG',n:'Incidencias de seguridad o daños',u:'N°',md:0,s:'<',v:0,a:1,f:'Incidencias de daño, accidente o papeleta en el mes',src:'Reporte supervisor'},
+  {id:'ORD',n:'Orden y organización del área',u:'nota',md:4,s:'>',v:4,a:3,f:'Auditoría visual (escala 1–5)',src:'Inspección jefe'},
+  {id:'PRD',n:'Productividad (pedidos/día)',u:'ped/día',md:0,s:'>',f:'Pedidos preparados ÷ Días laborados (definir meta del puesto)',src:'Registro operación'}],
+ 'Administración / RRHH':[
+  {id:'KPI_A',n:'% KPIs del área en verde',u:'%',md:85,s:'>',v:85,a:70,f:'KPIs en verde ÷ Total KPIs del área × 100',src:'Hub KPI'},
+  {id:'R01',n:'% Tardanzas del personal',u:'%',md:5,s:'<',v:5,a:15,f:'Colaboradores con tardanza ÷ Total × 100',src:'Marcaciones'},
+  {id:'R03',n:'% Rotación mensual',u:'%',md:3,s:'<',v:3,a:6,f:'Salidas ÷ Planilla promedio × 100',src:'Incorporaciones'},
+  {id:'R04',n:'% Vacaciones gestionadas',u:'%',md:80,s:'>',v:80,a:60,f:'Vacaciones programadas ÷ Vacaciones generadas × 100',src:'Reporte vacaciones'},
+  {id:'PRES',n:'Desviación del presupuesto operativo',u:'%',md:5,s:'<',v:5,a:10,f:'Desviación gasto real vs presupuesto aprobado',src:'Reporte financiero'},
+  {id:'AD01',n:'% Cumplimiento actas de comité',u:'%',md:95,s:'>',v:95,a:80,f:'Compromisos de acta cumplidos ÷ Total × 100',src:'Actas comité'},
+  {id:'PROJ',n:'Proyectos comprometidos entregados (%)',u:'%',md:100,s:'>',v:100,a:80,f:'Proyectos entregados en plazo ÷ Comprometidos × 100',src:'Actas de comité'}],
+ 'Transversal (todos los puestos)':[
+  {id:'MAR',n:'Marcación y puntualidad (% horas)',u:'%',md:90,s:'>',v:90,a:80,f:'Horas laboradas ÷ Horas requeridas × 100',src:'Marcaciones'},
+  {id:'TAR',n:'N° de tardanzas del mes',u:'N°',md:5,s:'<',v:5,a:10,f:'Cantidad de tardanzas registradas en el mes',src:'Marcaciones'}]
+};
+const DZ_TRANS='Transversal (todos los puestos)';
+const DZ_AREA={'JEFE DE LOGÍSTICA':'Logística y Compras','JEFE DE ALMACÉN':'Logística y Compras','COORDINADOR DE COMPRAS':'Logística y Compras','ANALISTA DE COMPRAS':'Logística y Compras','ASISTENTE DE COMPRAS':'Logística y Compras','ASISTENTE DE ALMACÉN':'Logística y Compras','ASISTENTE DE CONFIRMACIONES':'Logística y Compras','AUXILIAR DE ALMACÉN':'Logística y Compras','AUXILIAR DE PICKING':'Logística y Compras','AUXILIAR DE REPARTO':'Logística y Compras','CHOFER':'Logística y Compras','AUXILIAR DE LIQUIDACIÓN – ALMACÉN':'Logística y Compras','ASISTENTE LOGÍSTICO':'Logística y Compras','MOTORIZADO':'Logística y Compras','JEFE DE ADMINISTRACIÓN Y LOGÍSTICA':'Administración','ANALISTA DE RECURSOS HUMANOS':'Administración'};
+const DZ_CATS={'JEFE DE LOGÍSTICA':['Logística','Operaciones de Campo','Confirmaciones / Distribución'],'JEFE DE ALMACÉN':['Almacén / Inventarios','Logística'],'COORDINADOR DE COMPRAS':['Compras','Almacén / Inventarios'],'ANALISTA DE COMPRAS':['Compras'],'ASISTENTE DE COMPRAS':['Compras'],'ASISTENTE DE ALMACÉN':['Almacén / Inventarios'],'ASISTENTE DE CONFIRMACIONES':['Confirmaciones / Distribución','Logística'],'AUXILIAR DE ALMACÉN':['Almacén / Inventarios','Operaciones de Campo'],'AUXILIAR DE PICKING':['Almacén / Inventarios','Operaciones de Campo'],'AUXILIAR DE REPARTO':['Logística','Operaciones de Campo','Confirmaciones / Distribución'],'CHOFER':['Logística','Operaciones de Campo','Confirmaciones / Distribución'],'AUXILIAR DE LIQUIDACIÓN – ALMACÉN':['Confirmaciones / Distribución','Almacén / Inventarios'],'ASISTENTE LOGÍSTICO':['Logística','Almacén / Inventarios','Confirmaciones / Distribución'],'MOTORIZADO':['Operaciones de Campo','Confirmaciones / Distribución'],'JEFE DE ADMINISTRACIÓN Y LOGÍSTICA':['Administración / RRHH','Logística','Compras'],'ANALISTA DE RECURSOS HUMANOS':['Administración / RRHH']};
+// KPIs sugeridos por puesto [id, peso, meta] — el 4.º es Marcación con el peso restante (se puede quitar o cambiar)
+const DZ_DEF={'JEFE DE LOGÍSTICA':[['L01',35,95],['L02',30,5],['L05',20,85]],'JEFE DE ALMACÉN':[['A01',35,98],['A02',30,15],['A05',20,95]],'COORDINADOR DE COMPRAS':[['C01',35,5],['C04',25,60],['OBS',25,10]],'ANALISTA DE COMPRAS':[['C01',35,5],['C04',25,60],['C02',25,85]],'ASISTENTE DE COMPRAS':[['C05',35,90],['C02',30,85],['DOC',25,2]],'ASISTENTE DE ALMACÉN':[['A05',35,95],['DSP',30,98],['RCP',25,100]],'ASISTENTE DE CONFIRMACIONES':[['CON',40,90],['REP',30,100],['RES',20,5]],'AUXILIAR DE ALMACÉN':[['PCK',40,98],['A05',30,95],['ORD',20,4]],'AUXILIAR DE PICKING':[['PCK',45,98],['PRD',30,0],['SEG',15,0]],'AUXILIAR DE REPARTO':[['ENT',45,95],['L02',30,5],['SEG',15,0]],'CHOFER':[['L01',40,95],['FLT',30,98],['SEG',20,0]],'AUXILIAR DE LIQUIDACIÓN – ALMACÉN':[['LIQ',40,95],['DSP',30,98],['DEV',20,100]],'ASISTENTE LOGÍSTICO':[['L01',35,95],['RCP',30,100],['CON',25,90]],'MOTORIZADO':[['ENT',45,95],['CON',30,100],['SEG',15,0]],'JEFE DE ADMINISTRACIÓN Y LOGÍSTICA':[['KPI_A',35,85],['PRES',30,5],['PROJ',25,100]],'ANALISTA DE RECURSOS HUMANOS':[['R01',35,5],['R03',25,3],['R04',25,80]]};
+
+let dzPuestoCfg=null, dzPuestoEval=null, dzDraft=[], dzCatAll=false;
+
+function dzKpi(id){for(const c of Object.values(DZ_CAT)){const k=c.find(x=>x.id===id);if(k)return k}return null}
+function dzPer(ym){if(!ym)return'—';const [y,m]=ym.split('-');return DZ_MESES[+m-1]+' '+y}
+function dzNum(x){return parseFloat(String(x).replace('%','').replace(',','.'))}
+function dzDef(p){const d=(DZ_DEF[p]||[]).map(([id,pp,m])=>({id,p:pp,m}));const rest=100-d.reduce((a,x)=>a+x.p,0);d.push({id:'MAR',p:rest,m:90});return d}
+
+// ── configuración vigente por puesto / período ──
+function dzStore(){return (ST.desemp_cfg&&ST.desemp_cfg.data)||{}}
+function dzGetCfg(p,periodo){
+  const v=(dzStore()[p]||[]).filter(x=>x.desde<=periodo).sort((a,b)=>a.desde<b.desde?1:-1)[0];
+  return v?{desde:v.desde,kpis:v.kpis.map(k=>({...k})),custom:true}:{desde:null,kpis:dzDef(p),custom:false};
 }
 
-let puestoActual = null;
-function selPuesto(el, p){
-  document.querySelectorAll('.puesto-pill').forEach(x=>x.classList.remove('active'));
-  el.classList.add('active');
-  puestoActual = p;
-  document.getElementById('ficha_eval_wrap').style.display = 'none';
+// ── semáforo ──
+function dzThr(kd,meta){
+  const m=isNaN(dzNum(meta))?kd.md:dzNum(meta);
+  if(kd.v!=null) return {v:m+(kd.v-kd.md),a:m+(kd.a-kd.md),m};
+  return kd.s==='>'?{v:m*0.9,a:m*0.7,m}:{v:m,a:m*1.5,m};
+}
+function dzSem(kd,meta,res){
+  const r=String(res||'').toLowerCase().trim(); if(!r)return'nd';
+  if(r==='v'||r==='verde')return'verde'; if(r==='a'||r==='amarillo')return'amarillo'; if(r==='r'||r==='rojo')return'rojo';
+  if(kd.man)return'nd';
+  const n=dzNum(r); if(isNaN(n))return'nd';
+  const t=dzThr(kd,meta);
+  if(kd.s==='>') return n>=t.v?'verde':n>=t.a?'amarillo':'rojo';
+  return n<=t.v?'verde':n<=t.a?'amarillo':'rojo';
+}
+function dzRef(kd,meta){
+  if(kd.man) return '<div>Evaluar con V / A / R</div>';
+  const t=dzThr(kd,meta),u=kd.u==='%'?'%':'',f=x=>Math.round(x*100)/100;
+  return kd.s==='>'
+   ?`<div><span class="dz-dot dz-dv"></span>V: ≥ ${f(t.v)}${u}</div><div><span class="dz-dot dz-da"></span>A: ${f(t.a)}–${f(t.v)}${u}</div><div><span class="dz-dot dz-dr"></span>R: &lt; ${f(t.a)}${u}</div>`
+   :`<div><span class="dz-dot dz-dv"></span>V: ≤ ${f(t.v)}${u}</div><div><span class="dz-dot dz-da"></span>A: ${f(t.v)}–${f(t.a)}${u}</div><div><span class="dz-dot dz-dr"></span>R: &gt; ${f(t.a)}${u}</div>`;
+}
+const DZ_FACT={verde:1,amarillo:.6,rojo:.2,nd:0};
+
+// ── selector de puestos ──
+function dzPills(id,act,fn){
+  const areas={};Object.keys(DZ_DEF).forEach(p=>{(areas[DZ_AREA[p]]=areas[DZ_AREA[p]]||[]).push(p)});
+  document.getElementById(id).innerHTML=Object.entries(areas).map(([a,ps])=>`<div class="area-label">🏢 ${a}</div><div class="puesto-grid">${ps.map(p=>`<div class="puesto-pill ${p===act?'active':''}" onclick="${fn}('${p}')">${p}</div>`).join('')}</div>`).join('');
+}
+function buildPuestosPills(){dzPills('dz_pills_cfg',dzPuestoCfg,'dzSelCfg');dzPills('dz_pills_eval',dzPuestoEval,'dzSelEval');dzColabs();dzRol()}
+function dzRol(){document.querySelectorAll('.dz-edit').forEach(e=>{e.style.display=(typeof ROL!=='undefined'&&ROL==='LECTOR')?'none':''})}
+function dzSub(t){
+  ['cfg','eval','hist'].forEach(x=>{document.getElementById('dz_'+x).style.display=x===t?'block':'none';document.getElementById('dzt_'+x).classList.toggle('active',x===t)});
+  if(t==='hist')renderHistEval(); dzRol();
 }
 
-function calcularEval(){
-  if(!puestoActual){alert('Selecciona un puesto primero');return}
-  const nombre = document.getElementById('eval_nombre').value.trim() || puestoActual;
-  const periodo = document.getElementById('eval_periodo').value;
-  const kpis = KPI_PUESTOS[puestoActual] || [];
-  
-  const wrap = document.getElementById('ficha_eval_wrap');
-  wrap.style.display = 'block';
-  document.getElementById('firma_colab').textContent = nombre;
-
-  // Ficha header
-  document.getElementById('ficha_hdr').innerHTML = `
-    <div class="fi-ico">👤</div>
-    <div class="fi-info">
-      <h2>${nombre}</h2>
-      <span class="fi-tag">${puestoActual}</span>
-      <div class="fi-area">Grupo Merpes Perú S.A.C. · Jefe: Dante Clavijo B.</div>
-    </div>
-    <div class="fi-score">
-      <div class="sc-lbl">Puntaje</div>
-      <div class="sc-num" id="hdr_score">—</div>
-      <div class="sc-nota" id="hdr_nota">En proceso</div>
-    </div>`;
-
-  // Tabla evaluación
-  const tbl = document.getElementById('tbl_eval');
-  tbl.innerHTML = `<thead><tr>
-    <th>KPI</th><th>Meta</th><th>Peso</th><th>Resultado</th><th>Semáforo</th><th>Puntaje</th>
-  </tr></thead><tbody>${kpis.map(k=>`
-    <tr>
-      <td><div class="kpi-name">${k.nom}</div><div class="kpi-fml">${k.cod}</div></td>
-      <td style="color:var(--gray);font-size:11px">${k.meta}</td>
-      <td style="font-weight:700;color:var(--navy);text-align:center">${k.peso}%</td>
-      <td><input class="inp-result" id="ev_${k.cod}" placeholder="Ingresa resultado" onchange="recalcEval()"></td>
-      <td id="ev_sem_${k.cod}"><span class="sem sem-nd">— N/D</span></td>
-      <td id="ev_pts_${k.cod}" style="font-weight:800;color:var(--navy);text-align:center">—</td>
-    </tr>`).join('')}
-  </tbody>`;
-  recalcEval();
+// ══ 1 · CONFIGURACIÓN ══
+function dzSelCfg(p){dzPuestoCfg=p;dzPills('dz_pills_cfg',p,'dzSelCfg');dzLoadDraft();dzCfgRender()}
+function dzLoadDraft(){const d=document.getElementById('dz_desde').value||'2026-11';dzDraft=dzGetCfg(dzPuestoCfg,d).kpis}
+function dzCfgRender(){
+  if(!dzPuestoCfg)return;
+  const desde=document.getElementById('dz_desde').value||'2026-11';
+  // si cambia el mes, recarga lo vigente en ese mes
+  if(dzCfgRender._d!==desde||dzCfgRender._p!==dzPuestoCfg){dzCfgRender._d=desde;dzCfgRender._p=dzPuestoCfg;dzLoadDraft()}
+  document.getElementById('dz_cfg_card').style.display='block';
+  document.getElementById('dz_cfg_title').textContent=dzPuestoCfg+' — '+DZ_AREA[dzPuestoCfg];
+  const rows=dzDraft.map((k,i)=>{const kd=dzKpi(k.id);if(!kd)return'';
+    return`<tr>
+     <td><span class="dz-cod">${kd.id}</span>${kd.nuevo?'<span class="dz-new">NUEVO</span>':''}<div class="kpi-name">${kd.n}</div><div class="kpi-fml">${kd.f}</div><span class="dz-src">📁 ${kd.src}</span></td>
+     <td style="text-align:center"><input class="dz-peso" type="number" min="5" max="100" value="${k.p}" oninput="dzSetPeso(${i},this.value)"> <span style="font-size:10px;color:var(--gray)">%</span></td>
+     <td style="text-align:center"><input class="dz-meta" type="text" value="${k.m}" oninput="dzSetMeta(${i},this.value)"><div style="font-size:9px;color:var(--gray);margin-top:2px">${kd.u}</div></td>
+     <td><div class="dz-ref" id="dz_ref_${i}">${dzRef(kd,k.m)}</div></td>
+     <td style="text-align:center"><button class="btn btn-ghost btn-xs dz-edit" onclick="dzDel(${i})" title="Quitar este KPI">✕ Quitar</button></td></tr>`}).join('');
+  document.getElementById('dz_cfg_body').innerHTML=`
+   <div class="alert-info-dz" style="margin:12px 18px 0">📅 Esta configuración regirá <strong>desde ${dzPer(desde)}</strong> para <strong>${dzPuestoCfg}</strong>. ${dzGetCfg(dzPuestoCfg,desde).custom?'(Ya existe una configuración vigente; al guardar se actualiza para ese mes.)':'(Aún no hay configuración guardada: se muestran los KPIs sugeridos.)'}</div>
+   <div class="tbl-wrap"><table class="kpi-tbl"><thead><tr><th style="width:42%">KPI</th><th>Peso</th><th>Meta</th><th style="width:22%">Semáforo</th><th></th></tr></thead>
+   <tbody>${rows||'<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--gray)">Sin KPIs. Usa “➕ Agregar KPI”.</td></tr>'}</tbody>
+   <tfoot><tr><td style="font-weight:800;color:var(--navy)">TOTAL (${dzDraft.length} de 4 KPIs)</td><td style="text-align:center;font-size:16px;font-weight:900" id="dz_tot">—</td><td colspan="3" style="font-size:11px;color:var(--gray)">Destacado ≥ 85 pts · En proceso 70–84 · Por mejorar &lt; 70 · Semáforo: verde 100% · amarillo 60% · rojo 20% del peso</td></tr></tfoot></table></div>`;
+  dzTot();dzHistCfg();dzRol();
+}
+function dzTot(){const t=dzDraft.reduce((a,k)=>a+(+k.p||0),0),e=document.getElementById('dz_tot');if(e){e.textContent=t+'%';e.style.color=t===100?'var(--green)':'var(--red)'}}
+function dzSetPeso(i,v){dzDraft[i].p=parseInt(v)||0;dzTot()}
+function dzSetMeta(i,v){dzDraft[i].m=v;const kd=dzKpi(dzDraft[i].id),e=document.getElementById('dz_ref_'+i);if(e&&kd)e.innerHTML=dzRef(kd,v)}
+function dzDel(i){dzDraft.splice(i,1);dzCfgRender()}
+function dzResetCfg(){if(!dzPuestoCfg)return;if(!confirm('¿Volver a los KPIs sugeridos para este puesto? (no se guarda hasta que pulses Guardar)'))return;dzDraft=dzDef(dzPuestoCfg);dzCfgRender()}
+function dzHistCfg(){
+  const v=(dzStore()[dzPuestoCfg]||[]).slice().sort((a,b)=>a.desde<b.desde?1:-1);
+  document.getElementById('dz_cfg_hist').innerHTML=v.length?`<div class="dz-lbl" style="margin-bottom:6px">Historial de configuraciones de este puesto</div>`+v.map(x=>`<div style="font-size:11px;color:var(--gray);padding:4px 0;border-bottom:1px solid var(--border)"><strong style="color:var(--navy)">Desde ${dzPer(x.desde)}</strong> — ${x.kpis.map(k=>k.id+' '+k.p+'%').join(' · ')}</div>`).join(''):'';
+}
+function dzGuardarCfg(){
+  if(!dzPuestoCfg){alert('Selecciona un puesto');return}
+  if(ROL==='LECTOR'){alert('Tu rol es de solo lectura');return}
+  if(dzDraft.length<1||dzDraft.length>4){alert('Cada puesto debe tener entre 1 y 4 KPIs.');return}
+  const t=dzDraft.reduce((a,k)=>a+(+k.p||0),0);
+  if(t!==100){alert('⚠️ Los pesos deben sumar 100%. Actualmente: '+t+'%');return}
+  const desde=document.getElementById('dz_desde').value;if(!desde){alert('Indica el mes desde el cual rige');return}
+  const data=JSON.parse(JSON.stringify(dzStore()));
+  const arr=(data[dzPuestoCfg]||[]).filter(x=>x.desde!==desde);
+  arr.push({desde,kpis:dzDraft.map(k=>({id:k.id,p:+k.p,m:k.m})),ts:new Date().toISOString(),por:ROL});
+  data[dzPuestoCfg]=arr;
+  ST.desemp_cfg={ts:new Date().toISOString(),data};
+  guardarLocal(); if(GS_URL) gsPost('desemp_cfg',ST.desemp_cfg);
+  alert('✅ Configuración guardada para '+dzPuestoCfg+' desde '+dzPer(desde));
+  dzCfgRender();
+}
+// catálogo
+function dzAbrirCat(){if(!dzPuestoCfg){alert('Selecciona un puesto');return}dzCatRender();document.getElementById('dz_cat_ov').style.display='flex'}
+function dzCerrarCat(){document.getElementById('dz_cat_ov').style.display='none'}
+function dzCatRender(){
+  const usados=dzDraft.map(k=>k.id), rel=[...(DZ_CATS[dzPuestoCfg]||[]),DZ_TRANS], cats=dzCatAll?Object.keys(DZ_CAT):rel;
+  document.getElementById('dz_cat_msg').textContent=dzDraft.length+' / 4 KPIs en uso';
+  document.getElementById('dz_cat_body').innerHTML=cats.map(c=>`<div class="dz-cat">📂 ${c}</div>`+DZ_CAT[c].map(k=>{
+    const u=usados.includes(k.id),off=u||dzDraft.length>=4;
+    return`<div class="dz-opt ${off?'off':''}" ${off?'':`onclick="dzAdd('${k.id}')"`}>
+      <div style="flex:1"><div style="font-weight:700;font-size:12px;color:var(--navy)"><span class="dz-cod">${k.id}</span> ${k.n}${k.nuevo?'<span class="dz-new">NUEVO</span>':''}</div><div style="font-size:10px;color:var(--gray);font-style:italic;margin-top:1px">${k.f}</div><div style="font-size:9px;color:var(--gray);margin-top:2px">📁 ${k.src} · meta sugerida ${k.md}${k.u==='%'?'%':' '+k.u}</div></div>
+      <div style="font-size:11px;font-weight:700;color:${u?'var(--green)':'var(--navy)'}">${u?'✓ En uso':(dzDraft.length>=4?'Máx. 4':'➕ Agregar')}</div></div>`}).join('')).join('')
+   +`<div style="text-align:center;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="dzCatAll=!dzCatAll;dzCatRender()">${dzCatAll?'Ver solo KPIs del puesto':'Ver todo el catálogo'}</button></div>`;
+}
+function dzAdd(id){
+  if(dzDraft.length>=4)return; const kd=dzKpi(id);
+  const resto=Math.max(5,100-dzDraft.reduce((a,k)=>a+(+k.p||0),0));
+  dzDraft.push({id,p:resto,m:kd.md});dzCatRender();dzCfgRender();
 }
 
-function recalcEval(){
-  const kpis = KPI_PUESTOS[puestoActual]||[];
-  let totalPts = 0; let pesoUsado = 0;
-  kpis.forEach(k=>{
-    const inp = document.getElementById('ev_'+k.cod);
-    const val = inp?.value.trim();
-    if(!val) return;
-    let score = 85; // default "en proceso"
-    if(val.includes('%')){
-      const n = parseFloat(val);
-      if(k.meta.includes('≥')) score = n>=parseFloat(k.meta.replace(/[^0-9.]/g,''))?100:n>=parseFloat(k.meta.replace(/[^0-9.]/g,''))*0.9?80:60;
-      else if(k.meta.includes('≤')) score = n<=parseFloat(k.meta.replace(/[^0-9.]/g,''))?100:n<=parseFloat(k.meta.replace(/[^0-9.]/g,''))*1.1?80:60;
-    }
-    const pts = Math.round(score * k.peso / 100);
-    totalPts += pts; pesoUsado += k.peso;
-    const semEl = document.getElementById('ev_sem_'+k.cod);
-    const ptsEl = document.getElementById('ev_pts_'+k.cod);
-    const s = score>=90?'sem-v':score>=70?'sem-a':'sem-r';
-    const st = score>=90?'✅ VERDE':score>=70?'🟡 AMARILLO':'🔴 ROJO';
-    if(semEl) semEl.innerHTML=`<span class="sem ${s}">${st}</span>`;
-    if(ptsEl) ptsEl.textContent = pts;
-  });
-  const scoreEl = document.getElementById('hdr_score');
-  const notaEl = document.getElementById('hdr_nota');
-  if(pesoUsado>0 && scoreEl){
-    const pctFinal = Math.round(totalPts/(pesoUsado)*100);
-    scoreEl.textContent = pctFinal;
-    const nota = pctFinal>=90?'⭐ Destacado':pctFinal>=70?'📈 En proceso':'📌 Por mejorar';
-    const col = pctFinal>=90?'var(--green)':pctFinal>=70?'var(--amber)':'var(--red)';
-    notaEl.textContent = nota; notaEl.style.color = col;
-    scoreEl.style.color = col;
-    updateTotalizador(kpis, pctFinal);
-  }
+// ══ 2 · EVALUACIÓN ══
+function dzSelEval(p){dzPuestoEval=p;dzPills('dz_pills_eval',p,'dzSelEval');dzFicha()}
+function dzNorm(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z ]/g,' ').split(/\s+/).filter(w=>w.length>2)}
+function dzFotoDe(nombre){
+  const t=dzNorm(nombre); if(t.length<2)return'';
+  const ex=lsG('merpes_fotos_extra')||{}, k=t.join(' ');
+  if(ex[k])return ex[k];
+  let best='',bs=0;
+  Object.entries(DZ_FOTOS).forEach(([n,src])=>{const s=dzNorm(n).filter(w=>t.includes(w)).length;if(s>bs){bs=s;best=src}});
+  return bs>=2?best:'';
 }
-
-function updateTotalizador(kpis, score){
-  const t = document.getElementById('eval_total');
-  if(!t) return;
-  const nota = score>=90?'⭐ Destacado':score>=70?'📈 En proceso':'📌 Por mejorar';
-  const col = score>=90?'var(--green)':score>=70?'var(--amber)':'var(--red)';
-  t.innerHTML = `
-    <div class="bars">
-      ${kpis.map(k=>{
-        const inp = document.getElementById('ev_'+k.cod);
-        const hasVal = inp?.value.trim();
-        return `<div class="bar-row">
-          <div class="bar-lbl">${k.nom.substring(0,25)}...</div>
-          <div class="bar-outer2"><div class="bar-inner2" style="width:${k.peso}%;background:${col}"></div></div>
-          <div class="bar-val">${k.peso}%</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="score-card" style="border-color:${col}">
-      <div class="sc-label">Puntaje final</div>
-      <div class="sc-num" style="color:${col}">${score}</div>
-      <div class="sc-nota" style="color:${col}">${nota}</div>
-    </div>`;
+function dzColabs(){
+  const n=new Set(Object.keys(DZ_FOTOS).map(x=>x.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())));
+  (ST.desempeno||[]).forEach(e=>{if(e.nombre&&e.nombre!==e.puesto)n.add(e.nombre)});
+  document.getElementById('dz_colabs').innerHTML=[...n].map(x=>`<option value="${x}">`).join('');
 }
-
-function guardarEval(){
-  if(!puestoActual){alert('Selecciona un puesto primero');return}
-  const nombre = document.getElementById('eval_nombre').value.trim()||puestoActual;
-  const periodo = document.getElementById('eval_periodo').value;
-  const scoreEl = document.getElementById('hdr_score');
-  const score = scoreEl?parseInt(scoreEl.textContent)||0:0;
-  const nota = score>=90?'Destacado':score>=70?'En proceso':'Por mejorar';
-  if(!ST.desempeno) ST.desempeno=[];
-  ST.desempeno.push({
-    id:'EVAL'+Date.now(), nombre, puesto:puestoActual, periodo, score, nota,
-    logros: document.getElementById('obs_logros').value,
-    mejora: document.getElementById('obs_mejora').value,
-    compromisos: document.getElementById('obs_compromisos').value,
-    evaluador: document.getElementById('obs_evaluador').value,
-    ts: new Date().toISOString()
-  });
-  guardarLocal();
-  if(GS_URL) gsPost('desempeno', ST.desempeno);
-  renderHistEval();
-  alert('✅ Evaluación guardada correctamente');
+function dzCargarFoto(inp){
+  const nombre=document.getElementById('eval_nombre').value.trim(),t=dzNorm(nombre);
+  if(t.length<2){alert('Escribe primero el nombre del colaborador (nombre y apellido).');inp.value='';return}
+  const f=inp.files[0];if(!f)return;const r=new FileReader();
+  r.onload=e=>{const im=new Image();im.onload=()=>{
+    const s=Math.min(im.width,im.height),c=document.createElement('canvas');c.width=c.height=180;
+    c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,180,180);
+    const ex=lsG('merpes_fotos_extra')||{};ex[t.join(' ')]=c.toDataURL('image/jpeg',.82);lsS('merpes_fotos_extra',ex);dzHdr();};
+    im.src=e.target.result};r.readAsDataURL(f);inp.value='';
 }
+function dzHdr(){
+  if(!dzPuestoEval)return;
+  const nombre=document.getElementById('eval_nombre').value.trim()||'— Escribe el nombre del colaborador —';
+  const periodo=document.getElementById('eval_periodo').value, src=dzFotoDe(nombre);
+  document.getElementById('firma_colab').textContent=nombre;
+  document.getElementById('ficha_hdr').className='ficha-hdr dz';
+  document.getElementById('ficha_hdr').innerHTML=`
+   <div><div class="dz-foto" onclick="document.getElementById('dz_foto_inp').click()" title="Clic para cargar o cambiar la foto">${src?`<img src="${src}" alt="foto">`:'<span class="ph">👤</span>'}<span class="lb">📷 Cargar foto</span></div><input type="file" accept="image/*" id="dz_foto_inp" style="display:none" onchange="dzCargarFoto(this)"></div>
+   <div class="fi-info"><h2>${nombre}</h2><span class="fi-tag">${dzPuestoEval}</span><div class="fi-area">🏢 ${DZ_AREA[dzPuestoEval]} · Período evaluado: ${dzPer(periodo)}</div></div>
+   <div class="fi-score"><div class="sc-lbl">Puntaje</div><div class="sc-num" id="hdr_score">—</div><div class="sc-nota" id="hdr_nota">Sin datos</div></div>`;
+}
+function dzFicha(soft){
+  if(!dzPuestoEval)return;
+  document.getElementById('ficha_eval_wrap').style.display='block';
+  if(soft===true&&document.getElementById('tbl_eval').innerHTML){const prev=dzGuardaRes();dzHdr();dzCalc();return}
+  const prev=dzGuardaRes();
+  const periodo=document.getElementById('eval_periodo').value, cfg=dzGetCfg(dzPuestoEval,periodo);
+  dzHdr();
+  const rows=cfg.kpis.map((k,i)=>{const kd=dzKpi(k.id);if(!kd)return'';
+    return`<tr>
+     <td><span class="dz-cod">${kd.id}</span>${kd.nuevo?'<span class="dz-new">NUEVO</span>':''}<div class="kpi-name">${kd.n}</div><div class="kpi-fml">${kd.f}</div><span class="dz-src">📁 ${kd.src}</span></td>
+     <td style="text-align:center"><div style="font-size:11px;color:var(--gray);margin-bottom:4px">Meta: <strong>${k.m}${kd.u==='%'?'%':' '+kd.u}</strong></div><div class="dz-ref">${dzRef(kd,k.m)}</div></td>
+     <td style="text-align:center"><div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:4px">${k.p}%</div><div style="height:6px;background:var(--border);border-radius:3px;margin:0 8px"><div style="height:100%;border-radius:3px;background:var(--gold);width:${k.p}%"></div></div></td>
+     <td style="text-align:center"><input class="inp-result" id="ev_${i}" data-id="${k.id}" placeholder="${kd.man?'V / A / R':'Resultado'}" value="${prev[k.id]||''}" oninput="dzCalc()"></td>
+     <td style="text-align:center" id="ev_sem_${i}"><span class="sem sem-nd">— N/D</span></td>
+     <td style="text-align:center"><div style="font-size:18px;font-weight:900;color:var(--navy)" id="ev_pts_${i}">—</div><div style="font-size:9px;color:var(--gray)">/ ${k.p} pts</div></td></tr>`}).join('');
+  document.getElementById('tbl_eval').innerHTML=`<thead><tr><th style="width:32%">Indicador</th><th>Meta y semáforo</th><th>Peso</th><th>Resultado</th><th>Semáforo</th><th>Puntaje</th></tr></thead><tbody>${rows}</tbody>`;
+  const aviso=cfg.custom?`Configuración vigente desde ${dzPer(cfg.desde)}`:'Aún no hay configuración guardada para este puesto: se usan los KPIs sugeridos (ajústalos en la pestaña 1).';
+  document.getElementById('eval_total').innerHTML=`<div id="dz_aviso" style="grid-column:1/-1;font-size:10px;color:var(--gray)">⚙️ ${aviso}</div><div class="bars" id="dz_bars"></div><div class="score-card" id="dz_sc"><div class="sc-label">Puntaje final</div><div class="sc-num" id="dz_scn">—</div><div class="sc-nota" id="dz_scnota" style="color:var(--gray)">Sin datos</div></div>`;
+  dzCalc();
+}
+function dzGuardaRes(){const o={};document.querySelectorAll('#tbl_eval input[data-id]').forEach(i=>{if(i.value)o[i.dataset.id]=i.value});return o}
+function dzCalcDatos(){
+  const periodo=document.getElementById('eval_periodo').value, cfg=dzGetCfg(dzPuestoEval,periodo);
+  let tot=0,faltan=0;
+  const det=cfg.kpis.map((k,i)=>{const kd=dzKpi(k.id);const res=(document.getElementById('ev_'+i)?.value||'').trim();
+    const sem=kd?dzSem(kd,k.m,res):'nd', pts=Math.round(k.p*DZ_FACT[sem]);if(sem==='nd')faltan++;tot+=pts;return{id:k.id,p:k.p,m:k.m,res,sem,pts}});
+  return {det,tot,faltan,cfg};
+}
+function dzCalc(){
+  if(!dzPuestoEval)return;
+  const {det,tot,faltan}=dzCalcDatos();
+  const cls={verde:'sem-v',amarillo:'sem-a',rojo:'sem-r',nd:'sem-nd'},lbl={verde:'✅ VERDE',amarillo:'🟡 AMARILLO',rojo:'🔴 ROJO',nd:'— N/D'};
+  det.forEach((d,i)=>{const s=document.getElementById('ev_sem_'+i),p=document.getElementById('ev_pts_'+i);if(s)s.innerHTML=`<span class="sem ${cls[d.sem]}">${lbl[d.sem]}</span>`;if(p)p.textContent=d.sem==='nd'?'—':d.pts});
+  const nota=tot>=85?'Destacado':tot>=70?'En proceso':'Por mejorar', col=faltan===det.length?'var(--gray)':tot>=85?'var(--green)':tot>=70?'var(--amber)':'var(--red)';
+  const vacio=faltan===det.length;
+  const hs=document.getElementById('hdr_score'),hn=document.getElementById('hdr_nota');
+  if(hs){hs.textContent=vacio?'—':tot;hs.style.color=vacio?'#fff':col==='var(--green)'?'#7EE0A8':col==='var(--amber)'?'#F5CE6B':'#FF9C92'}
+  if(hn){hn.textContent=vacio?'Sin datos':(faltan?'Provisional · ':'')+nota;hn.style.color='#fff'}
+  const bars=document.getElementById('dz_bars');
+  if(bars)bars.innerHTML=det.map(d=>{const kd=dzKpi(d.id);const c=d.sem==='verde'?'var(--green)':d.sem==='amarillo'?'#E6A817':d.sem==='rojo'?'var(--red)':'var(--border)';
+    return`<div class="bar-row"><div class="bar-lbl" style="min-width:210px">${kd?kd.n:d.id}</div><div class="bar-outer2"><div class="bar-inner2" style="width:${d.p?Math.round(d.pts/d.p*100):0}%;background:${c}"></div></div><div class="bar-val">${d.sem==='nd'?'—':d.pts+'/'+d.p}</div></div>`}).join('');
+  const sc=document.getElementById('dz_sc');if(sc)sc.style.borderColor=vacio?'var(--border)':col;
+  const sn=document.getElementById('dz_scn');if(sn){sn.textContent=vacio?'—':tot;sn.style.color=col}
+  const so=document.getElementById('dz_scnota');if(so){so.textContent=vacio?'Sin datos':(faltan?'Provisional ('+faltan+' sin dato)':nota);so.style.color=col}
+}
+function calcularEval(){dzCalc()}
+function dzGuardarEval(){
+  if(ROL==='LECTOR'){alert('Tu rol es de solo lectura');return}
+  if(!dzPuestoEval){alert('Selecciona un puesto primero');return}
+  const nombre=document.getElementById('eval_nombre').value.trim();
+  if(!nombre){alert('Escribe el nombre del colaborador');return}
+  const {det,tot,faltan,cfg}=dzCalcDatos();
+  if(faltan&&!confirm('Hay '+faltan+' KPI(s) sin resultado. La evaluación quedará provisional. ¿Guardar de todos modos?'))return;
+  const periodo=document.getElementById('eval_periodo').value;
+  if(!ST.desempeno)ST.desempeno=[];
+  ST.desempeno.push({id:'EVAL'+Date.now(),nombre,puesto:dzPuestoEval,periodo,score:tot,nota:tot>=85?'Destacado':tot>=70?'En proceso':'Por mejorar',
+    prov:faltan?1:0,cfgDesde:cfg.desde,k:det.map(d=>[d.id,d.p,d.m,d.res,d.sem,d.pts]),
+    logros:document.getElementById('obs_logros').value,mejora:document.getElementById('obs_mejora').value,
+    compromisos:document.getElementById('obs_compromisos').value,evaluador:document.getElementById('obs_evaluador').value,ts:new Date().toISOString()});
+  guardarLocal(); if(GS_URL)gsPost('desempeno',ST.desempeno);
+  renderHistEval(); dzColabs();
+  alert('✅ Evaluación guardada\nColaborador: '+nombre+'\nPuntaje: '+tot+' pts');
+}
+// compatibilidad con llamadas anteriores
+function guardarEval(){dzGuardarEval()}
 
+// ══ 3 · HISTORIAL ══
 function renderHistEval(){
-  const t = document.getElementById('tbl_hist_eval');
-  if(!t) return;
-  const regs = ST.desempeno||[];
-  if(regs.length===0){
-    t.innerHTML='<thead><tr><th>Período</th><th>Colaborador</th><th>Puesto</th><th>Puntaje</th><th>Nota</th><th>Fecha</th></tr></thead><tbody><tr><td colspan="6" style="text-align:center;color:var(--gray);padding:20px">Sin evaluaciones guardadas</td></tr></tbody>';
-    return;
-  }
-  t.innerHTML=`<thead><tr><th>Período</th><th>Colaborador</th><th>Puesto</th><th>Puntaje</th><th>Nota</th><th>Fecha</th></tr></thead>
-  <tbody>${regs.slice().reverse().map(r=>{
-    const cls = r.nota==='Destacado'?'sem-v':r.nota==='En proceso'?'sem-a':'sem-r';
-    return `<tr>
-      <td>${r.periodo}</td><td style="font-weight:600">${r.nombre}</td>
-      <td style="font-size:11px;color:var(--gray)">${r.puesto}</td>
-      <td style="font-weight:800;font-size:16px;color:var(--navy)">${r.score}</td>
-      <td><span class="sem ${cls}">${r.nota}</span></td>
-      <td style="font-size:11px;color:var(--gray)">${new Date(r.ts).toLocaleDateString('es-PE')}</td>
-    </tr>`;
-  }).join('')}</tbody>`;
+  const t=document.getElementById('tbl_hist_eval');if(!t)return;
+  const regs=ST.desempeno||[],head='<thead><tr><th>Período</th><th>Colaborador</th><th>Puesto</th><th>KPIs</th><th>Puntaje</th><th>Nota</th><th>Fecha</th></tr></thead>';
+  if(!regs.length){t.innerHTML=head+'<tbody><tr><td colspan="7" style="text-align:center;color:var(--gray);padding:20px">Sin evaluaciones guardadas</td></tr></tbody>';return}
+  const sc={verde:'sem-v',amarillo:'sem-a',rojo:'sem-r',nd:'sem-nd'};
+  t.innerHTML=head+`<tbody>${regs.slice().reverse().map(r=>{
+    const cls=r.nota==='Destacado'?'sem-v':r.nota==='En proceso'?'sem-a':'sem-r',f=dzFotoDe(r.nombre);
+    const chips=(r.k||[]).map(k=>`<span class="sem ${sc[k[4]]||'sem-nd'}" style="font-size:9px;padding:1px 6px">${k[0]}</span>`).join(' ');
+    return`<tr><td>${r.periodo}</td><td style="font-weight:600">${f?`<img class="dz-thumb" src="${f}">`:''}${r.nombre}</td><td style="font-size:11px;color:var(--gray)">${r.puesto}</td><td>${chips}</td>
+     <td style="font-weight:800;font-size:16px;color:var(--navy)">${r.score}${r.prov?'<span style="font-size:9px;color:var(--gray)"> prov.</span>':''}</td><td><span class="sem ${cls}">${r.nota}</span></td><td style="font-size:11px;color:var(--gray)">${new Date(r.ts).toLocaleDateString('es-PE')}</td></tr>`}).join('')}</tbody>`;
 }
-
 function exportarHistEval(){
-  const data = JSON.stringify(ST.desempeno||[], null, 2);
-  const b = new Blob([data],{type:'application/json'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(b);
-  a.download='Historial_Evaluaciones_Merpes_'+new Date().toISOString().slice(0,10)+'.json';
-  a.click();
+  const b=new Blob([JSON.stringify(ST.desempeno||[],null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Historial_Evaluaciones_Merpes_'+new Date().toISOString().slice(0,10)+'.json';a.click();
 }
 
 // ══════════════════════════════════════════════
